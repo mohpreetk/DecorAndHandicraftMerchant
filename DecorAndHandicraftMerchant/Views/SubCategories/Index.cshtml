@@ -1,0 +1,45 @@
+﻿@model IEnumerable<DecorAndHandicraftMerchant.Models.SubCategory>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Shop by Sub Category</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    // used viewbag to sort products based on category
+    @if (item.Category.CategoryId == ViewBag.id){
+        <tr>
+            <td>
+                <a asp-controller="Products" asp-action="Index" asp-route-id="@item.SubCategoryId">@Html.DisplayFor(modelItem => item.Name)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SubCategoryId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.SubCategoryId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.SubCategoryId">Delete</a>
+            </td>
+        </tr>
+    }
+}
+    </tbody>
+</table>
