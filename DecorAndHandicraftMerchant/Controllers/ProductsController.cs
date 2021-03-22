@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DecorAndHandicraftMerchant.Data;
 using DecorAndHandicraftMerchant.Models;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace DecorAndHandicraftMerchant.Controllers
 {
@@ -25,7 +27,7 @@ namespace DecorAndHandicraftMerchant.Controllers
             //passing on the sub category id to Products Page
             ViewBag.id = id;
             var applicationDbContext = _context.Products.Include(p => p.SubCategory);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.OrderBy(c => c.Name).ToListAsync());
         }
 
         // GET: Products/Details/5
@@ -50,19 +52,32 @@ namespace DecorAndHandicraftMerchant.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["SubCategoryId"] = new SelectList(_context.SubCategories, "SubCategoryId", "Name");
+            ViewData["SubCategoryId"] = new SelectList(_context.SubCategories.OrderBy(sc => sc.Name), "SubCategoryId", "Name");
             return View();
         }
 
         // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Description,Price,SubCategoryId")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,Name,Description,Price,SubCategoryId")] Product product, IFormFile Photo)
         {
             if (ModelState.IsValid)
             {
+                if (Photo.Length > 0)
+                {
+                    var tempFile = Path.GetTempFileName();
+
+                    var fileName = Guid.NewGuid() + "-" + Photo.FileName;
+
+                    var uploadPath = Directory.GetCurrentDirectory() + "\\wwwroot\\images\\products_added\\" + fileName;
+                    if (uploadPath.Length < 260)
+                    {
+                        using var stream = new FileStream(uploadPath, FileMode.Create);
+                        await Photo.CopyToAsync(stream);
+
+                        product.Photo = fileName;
+                    }
+                }
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -88,9 +103,6 @@ namespace DecorAndHandicraftMerchant.Controllers
             return View(product);
         }
 
-        // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,Price,SubCategoryId")] Product product)

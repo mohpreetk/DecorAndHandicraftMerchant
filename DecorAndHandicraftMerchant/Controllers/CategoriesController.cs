@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DecorAndHandicraftMerchant.Data;
 using DecorAndHandicraftMerchant.Models;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace DecorAndHandicraftMerchant.Controllers
 {
@@ -22,7 +24,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            return View(await _context.Categories.OrderBy(c => c.Name).ToListAsync());
         }
 
         // GET: Categories/Details/5
@@ -49,15 +51,27 @@ namespace DecorAndHandicraftMerchant.Controllers
             return View();
         }
 
-        // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryId,Name")] Category category)
+        public async Task<IActionResult> Create([Bind("CategoryId,Name")] Category category, IFormFile Photo)
         {
             if (ModelState.IsValid)
             {
+                if (Photo.Length > 0)
+                {
+                    var tempFile = Path.GetTempFileName();
+
+                    var fileName = Guid.NewGuid() + "-" + Photo.FileName;
+
+                    var uploadPath = Directory.GetCurrentDirectory() + "\\wwwroot\\images\\categories_added\\" + fileName;
+                    if (uploadPath.Length < 260)
+                    {
+                        using var stream = new FileStream(uploadPath, FileMode.Create);
+                        await Photo.CopyToAsync(stream);
+
+                        category.Photo = fileName;
+                    }
+                }
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

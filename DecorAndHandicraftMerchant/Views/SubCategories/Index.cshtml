@@ -14,10 +14,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Photo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Photo)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Category)
@@ -31,16 +31,16 @@
     @if (item.Category.CategoryId == ViewBag.id){
         <tr>
             <td>
+                @if (item.Photo != null)
+                {
+                    <img src="~/images/sub-categories_added/@item.Photo" alt="Category" class="img-thumbnail" />
+                }
+            </td>
+            <td>
                 <a asp-controller="Products" asp-action="Index" asp-route-id="@item.SubCategoryId">@Html.DisplayFor(modelItem => item.Name)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                @if (item.Photo != null)
-                {
-                    <img src="~/images/sub-categories_added/" alt="Category" class="img-thumbnail" />
-                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.SubCategoryId">Edit</a> |

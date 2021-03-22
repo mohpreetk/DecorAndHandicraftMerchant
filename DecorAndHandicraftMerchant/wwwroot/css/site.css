@@ -83,3 +83,7 @@ body {
 .form-control {
     background-color: #cbcc9f;
 }
+
+.img-thumbnail{
+    width : 150px;
+}

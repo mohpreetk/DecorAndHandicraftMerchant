@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DecorAndHandicraftMerchant.Data;
 using DecorAndHandicraftMerchant.Models;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace DecorAndHandicraftMerchant.Controllers
 {
@@ -25,7 +27,7 @@ namespace DecorAndHandicraftMerchant.Controllers
             //passing on the category id to SubCategory Page
             ViewBag.id = id;
             var applicationDbContext = _context.SubCategories.Include(s => s.Category);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.OrderBy(c => c.Name).ToListAsync());
         }
 
         // GET: SubCategories/Details/5
@@ -50,19 +52,34 @@ namespace DecorAndHandicraftMerchant.Controllers
         // GET: SubCategories/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name");
+            ViewData["CategoryId"] = new SelectList(_context.Categories.OrderBy(c => c.Name), "CategoryId", "Name");
             return View();
         }
 
         // POST: SubCategories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SubCategoryId,Name,CategoryId")] SubCategory subCategory)
+        public async Task<IActionResult> Create([Bind("SubCategoryId,Name,CategoryId")] SubCategory subCategory, IFormFile Photo)
         {
             if (ModelState.IsValid)
             {
+                if (Photo.Length > 0)
+                {
+                    var tempFile = Path.GetTempFileName();
+
+                    var fileName = Guid.NewGuid() + "-" + Photo.FileName;
+
+                    var uploadPath = Directory.GetCurrentDirectory() + "\\wwwroot\\images\\sub-categories_added\\" + fileName;
+
+                    //to prevent upload of photos that can not be stored in OS
+                    if (uploadPath.Length < 260)
+                    {
+                        using var stream = new FileStream(uploadPath, FileMode.Create);
+                        await Photo.CopyToAsync(stream);
+
+                        subCategory.Photo = fileName;
+                    }
+                }
                 _context.Add(subCategory);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
