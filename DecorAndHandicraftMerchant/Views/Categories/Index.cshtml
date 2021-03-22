@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<DecorAndHandicraftMerchant.Models.Category>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Categories";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -16,7 +16,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Photo)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +26,12 @@
         <tr>
             <td>
                 <a asp-controller="SubCategories" asp-action="Index" asp-route-id="@item.CategoryId">@Html.DisplayFor(modelItem => item.Name)</a>
+            </td>
+            <td>
+                @if (item.Photo != null)
+                {
+                    <img src="~/images/categories_added/@item.Photo" alt="Category" class="img-thumbnail" />
+                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CategoryId">Edit</a> |

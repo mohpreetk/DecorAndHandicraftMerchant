@@ -8,30 +8,32 @@ namespace DecorAndHandicraftMerchant.Models
 {
     public class Address
     {
-        
-        [Range(0, double.MaxValue)]
+        [Display(Name = "Address")]
         public int AddressId { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 5)]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "Address Line should be between 5-100 Characters")]
+        [Display(Name = "Address Line 1")]
         public string AddressLine1 { get; set; }
 
+        [Display(Name = "Address Line 2")]
         public string AddressLine2 { get; set; }
 
         [Required]
-        [StringLength(30, MinimumLength = 3)]
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "City should be between 3-30 Characters")]
         public string City { get; set; }
 
         [Required]
-        [StringLength(5, MinimumLength = 2)]
+        [StringLength(5, MinimumLength = 2, ErrorMessage = "Province should be between 2-5 Characters")]
         public string Province { get; set; }
 
         [Required]
-        [StringLength(30, MinimumLength = 2)]
+        [StringLength(30, MinimumLength = 2, ErrorMessage = "Country should be between 2-30 Characters")]
         public string Country { get; set; }
 
         [Required]
-        [StringLength(10, MinimumLength = 3)]
+        [StringLength(10, MinimumLength = 3, ErrorMessage = "Postal Code should be between 3-10 Characters")]
+        [Display(Name = "Postal Code")]
         public string PostalCode { get; set; }
 
         public List<Order> Orders { get; set; }
