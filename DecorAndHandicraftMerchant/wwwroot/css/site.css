@@ -68,7 +68,7 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
-    background-color: #20f559;
+    background-color: #a2f2b8;
     color: #c90e56;
     font-size: 1.1rem;
 }
@@ -86,4 +86,42 @@ body {
 
 .img-thumbnail{
     width : 150px;
+}
+
+.product_image, .category_image, .subcategory_image {
+    width: 150px;
+    height: 150px;
+    vertical-align: middle;
+    text-align: center;
+    display: table-cell;
+}
+
+.product, .category, .subcategory{
+    margin: 0 auto;
+    width: 150px;
+}
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 10px;
+    grid-auto-rows: 100px;
+    text-align: center;
+    overflow: auto;
+}
+
+.detail_image {
+    width: 300px;
+}
+
+.center_view {
+    display: block;
+    text-align: center;
+}
+
+.bottom_right {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
 }

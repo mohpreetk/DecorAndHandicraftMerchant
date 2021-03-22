@@ -5,43 +5,35 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Shop by Category</h1>
+<h1 class="text-center">Shop by Category</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Photo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @if (item.Photo != null)
-                    {
-                        <img src="~/images/categories_added/@item.Photo" alt="Category" class="img-thumbnail" />
-                    }
-                </td>
-                <td>
-                    <a asp-controller="SubCategories" asp-action="Index" asp-route-id="@item.CategoryId">@Html.DisplayFor(modelItem => item.Name)</a>
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.CategoryId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.CategoryId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CategoryId">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<div class="grid-layout">
+    @foreach (var item in Model)
+    {
+        <div class="category">
+            <div class="category_image">
+                @if (item.Photo != null)
+                {
+                    <img src="~/images/categories_added/@item.Photo" alt="Category" class="img-thumbnail" />
+                }
+                else
+                {
+                    <img src="~/images/n_a.jpg" alt="Product" class="img-thumbnail" />
+                }
+            </div>
+            <div>
+                <a asp-controller="SubCategories" asp-action="Index" asp-route-id="@item">@Html.DisplayFor(modelItem => item.Name)</a>
+            </div>
+            <div>
+                <a asp-action="Edit" asp-route-id="@item.CategoryId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CategoryId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CategoryId">Delete</a>
+            </div>
+        </div>
+    }
+
+</div>

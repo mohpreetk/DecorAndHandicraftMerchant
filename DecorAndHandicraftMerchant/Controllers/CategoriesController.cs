@@ -100,7 +100,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CategoryId,Name")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("CategoryId,Name")] Category category, IFormFile Photo)
         {
             if (id != category.CategoryId)
             {
@@ -111,6 +111,21 @@ namespace DecorAndHandicraftMerchant.Controllers
             {
                 try
                 {
+                    if (Photo.Length > 0)
+                    {
+                        var tempFile = Path.GetTempFileName();
+
+                        var fileName = Guid.NewGuid() + "-" + Photo.FileName;
+
+                        var uploadPath = Directory.GetCurrentDirectory() + "\\wwwroot\\images\\categories_added\\" + fileName;
+                        if (uploadPath.Length < 260)
+                        {
+                            using var stream = new FileStream(uploadPath, FileMode.Create);
+                            await Photo.CopyToAsync(stream);
+
+                            category.Photo = fileName;
+                        }
+                    }
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }

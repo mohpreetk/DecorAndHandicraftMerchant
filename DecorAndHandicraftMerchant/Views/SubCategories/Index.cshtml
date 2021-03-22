@@ -5,50 +5,39 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Select a Sub Category</h1>
+<h1 class="text-center">Select a Sub Category</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Photo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-    // used viewbag to sort products based on category
-    @if (item.Category.CategoryId == ViewBag.id){
-        <tr>
-            <td>
-                @if (item.Photo != null)
-                {
-                    <img src="~/images/sub-categories_added/@item.Photo" alt="Category" class="img-thumbnail" />
-                }
-            </td>
-            <td>
-                <a asp-controller="Products" asp-action="Index" asp-route-id="@item.SubCategoryId">@Html.DisplayFor(modelItem => item.Name)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SubCategoryId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SubCategoryId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SubCategoryId">Delete</a>
-            </td>
-        </tr>
+
+<div class="grid-layout">
+    @foreach (var item in Model)
+    {
+        // used viewbag to sort products based on category
+        @if (item.Category.CategoryId == ViewBag.id)
+        {
+            <div class="subcategory">
+                <div class="subcategory_image">
+                    @if (item.Photo != null)
+                    {
+                        <img src="~/images/sub-categories_added/@item.Photo" alt="Category" class="img-thumbnail" />
+                    }
+                    else
+                    {
+                        <img src="~/images/n_a.jpg" alt="Product" class="img-thumbnail" />
+                    }
+                </div>
+                <div>
+                    <a asp-controller="Products" asp-action="Index" asp-route-id="@item.SubCategoryId">@Html.DisplayFor(modelItem => item.Name)</a>
+                </div>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@item.SubCategoryId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.SubCategoryId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.SubCategoryId">Delete</a>
+                </div>
+            </div>
+        }
     }
-}
-    </tbody>
-</table>
+
+</div>
