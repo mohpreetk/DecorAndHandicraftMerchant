@@ -9,6 +9,7 @@ using DecorAndHandicraftMerchant.Data;
 using DecorAndHandicraftMerchant.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DecorAndHandicraftMerchant.Controllers
 {
@@ -50,6 +51,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         }
 
         // GET: Products/Create
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             ViewData["SubCategoryId"] = new SelectList(_context.SubCategories.OrderBy(sc => sc.Name), "SubCategoryId", "Name");
@@ -59,11 +61,12 @@ namespace DecorAndHandicraftMerchant.Controllers
         // POST: Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Create([Bind("ProductId,Name,Description,Price,SubCategoryId")] Product product, IFormFile Photo)
         {
             if (ModelState.IsValid)
             {
-                if (Photo.Length > 0)
+                if (product.Photo != null && Photo.Length > 0)
                 {
                     var tempFile = Path.GetTempFileName();
 
@@ -87,6 +90,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -105,6 +109,7 @@ namespace DecorAndHandicraftMerchant.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,Price,SubCategoryId")] Product product)
         {
             if (id != product.ProductId)
@@ -137,6 +142,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         }
 
         // GET: Products/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -158,6 +164,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -170,5 +177,15 @@ namespace DecorAndHandicraftMerchant.Controllers
         {
             return _context.Products.Any(e => e.ProductId == id);
         }
+
+        //Temporary method created to demonstrate add to cart option only for logged in users
+        [Authorize]
+        public async Task<IActionResult> AddToCart()
+        {
+            var applicationDbContext = _context.Products.Include(p => p.SubCategory);
+            return View(await applicationDbContext.OrderBy(c => c.Name).ToListAsync());
+        }
+
     }
 }
+

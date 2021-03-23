@@ -46,7 +46,20 @@
         </dd>
     </dl>
 </div>
+
+@*for demonstration purpose only*@
+<form asp-action="AddToCart">
+    <div class="form-group">
+        <input type="submit" value="Add to Cart" class="btn btn-primary" />
+    </div>
+</form>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> |
+    @if (User.IsInRole("Administrator"))
+    {
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> |
+        </div>
+    }
     <a asp-action="Index">Back to List</a>
 </div>

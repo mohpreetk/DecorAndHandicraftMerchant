@@ -9,6 +9,7 @@ using DecorAndHandicraftMerchant.Data;
 using DecorAndHandicraftMerchant.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DecorAndHandicraftMerchant.Controllers
 {
@@ -31,6 +32,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         }
 
         // GET: SubCategories/Details/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -50,6 +52,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         }
 
         // GET: SubCategories/Create
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Categories.OrderBy(c => c.Name), "CategoryId", "Name");
@@ -59,11 +62,13 @@ namespace DecorAndHandicraftMerchant.Controllers
         // POST: SubCategories/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Create([Bind("SubCategoryId,Name,CategoryId")] SubCategory subCategory, IFormFile Photo)
         {
             if (ModelState.IsValid)
             {
-                if (Photo.Length > 0)
+                // In order to prevent null pointer exception
+                if (Photo != null && Photo.Length > 0)
                 {
                     var tempFile = Path.GetTempFileName();
 
@@ -82,13 +87,14 @@ namespace DecorAndHandicraftMerchant.Controllers
                 }
                 _context.Add(subCategory);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { id = subCategory.CategoryId });
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", subCategory.CategoryId);
             return View(subCategory);
         }
 
         // GET: SubCategories/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -110,7 +116,8 @@ namespace DecorAndHandicraftMerchant.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SubCategoryId,Name,CategoryId")] SubCategory subCategory)
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> Edit(int id, [Bind("SubCategoryId,Name,CategoryId")] SubCategory subCategory, IFormFile Photo)
         {
             if (id != subCategory.SubCategoryId)
             {
@@ -121,6 +128,24 @@ namespace DecorAndHandicraftMerchant.Controllers
             {
                 try
                 {
+                    // In order to prevent null pointer exception
+                    if (Photo != null && Photo.Length > 0)
+                    {
+                        var tempFile = Path.GetTempFileName();
+
+                        var fileName = Guid.NewGuid() + "-" + Photo.FileName;
+
+                        var uploadPath = Directory.GetCurrentDirectory() + "\\wwwroot\\images\\sub-categories_added\\" + fileName;
+
+                        //to prevent upload of photos that can not be stored in OS
+                        if (uploadPath.Length < 260)
+                        {
+                            using var stream = new FileStream(uploadPath, FileMode.Create);
+                            await Photo.CopyToAsync(stream);
+
+                            subCategory.Photo = fileName;
+                        }
+                    }
                     _context.Update(subCategory);
                     await _context.SaveChangesAsync();
                 }
@@ -135,13 +160,14 @@ namespace DecorAndHandicraftMerchant.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { id = subCategory.CategoryId });
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", subCategory.CategoryId);
             return View(subCategory);
         }
 
         // GET: SubCategories/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -163,12 +189,13 @@ namespace DecorAndHandicraftMerchant.Controllers
         // POST: SubCategories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var subCategory = await _context.SubCategories.FindAsync(id);
             _context.SubCategories.Remove(subCategory);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { id = subCategory.CategoryId });
         }
 
         private bool SubCategoryExists(int id)
