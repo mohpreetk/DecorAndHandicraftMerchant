@@ -232,9 +232,18 @@ namespace DecorAndHandicraftMerchant.Controllers
             {
                 CustomerId = HttpContext.Session.GetString("CustomerId");
             }
+            Console.WriteLine(HttpContext.Session.GetString("CustomerId"));
+
             var cartProducts
-                 = _context.Carts.Where(c => c.CustomerId == CustomerId).ToList();
+                 = _context.Carts.Include(c => c.Product).Where(c => c.CustomerId == CustomerId).ToList();
             return View(cartProducts);
+        }
+
+        [Authorize]
+        public IActionResult CheckOut()
+        {
+
+            return View();
         }
 
     }

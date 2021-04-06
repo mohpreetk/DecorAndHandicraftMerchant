@@ -1,54 +1,80 @@
 ﻿@model IEnumerable<DecorAndHandicraftMerchant.Models.Cart>
 
 @{
-    ViewData["Title"] = "Cart";
+    ViewData["Title"] = "Your Cart";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal itemTotal = 0;
+    decimal total = 0;
 }
 
-<h1>Cart</h1>
+<h1>Your Cart</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Product)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CustomerId)
-            </th>
+            <th></th>
             <th>
                 @Html.DisplayNameFor(model => model.UnitPrice)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
+            <th>
+               Item Total
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CustomerId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UnitPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CartId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CartId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            itemTotal = (item.Quantity * item.UnitPrice);
+            total += (item.Quantity * item.UnitPrice);
+            <tr>
+                <td>
+                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">@item.Product.Name</a>
+                </td>
+                <td>
+                    @if (item.Product.Photo != null)
+                    {
+                        <img src="~/images/products_added/@item.Product.Photo" alt="Category" class="detail_image" />
+                    }
+                    else
+                    {
+                        <img src="~/images/n_a.jpg" alt="Product" class="img-thumbnail" />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @String.Format("{0:c}", itemTotal)
+                </td>
+                <td>
+                    <a asp-action="Remove" asp-route-id="@item.CartId"><img src="~/images/app_icons/remove_from_cart.png" alt="Remove" title="Remove from Cart" class="icon" /></a>
+                </td>
+            </tr>
+        }
+    <tr>
+        <td colspan="4" class="text-right">
+            Cart Total =
+        </td>
+        <td class="text-left">
+            @String.Format("{0:c}", total)
+        </td>
+        <td>
+            <a asp-controller="Categories" asp-action="Index"><img src="~/images/app_icons/continue_shopping.png" alt="Continue" title="Continue Shopping" class="icon" /></a>
+        </td>
+        <td>
+            <a asp-controller="Products" asp-action="CheckOut"><img src="~/images/app_icons/check_out.png" alt="CheckOut" title="Check Out" class="icon" /></a>
+        </td>
+
+    </tr>
     </tbody>
 </table>
