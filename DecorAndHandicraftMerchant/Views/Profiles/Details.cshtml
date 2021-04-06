@@ -8,7 +8,6 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Profile</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -28,12 +27,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.AddressLine1)
@@ -74,6 +67,7 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ProfileId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-username="@User.Identity.Name">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model.ProfileId">Delete</a> |
+    <a href="javascript:history.go(-1);" class="bottom_right">Back </a>
 </div>

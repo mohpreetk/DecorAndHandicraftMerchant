@@ -31,12 +31,6 @@
             @Html.DisplayFor(model => model.PhoneNumber)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.AddressLine1)
         </dt>
         <dd class = "col-sm-10">
@@ -77,6 +71,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="ProfileId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a href="javascript:history.go(-1);" class="bottom_right">Back</a>
     </form>
 </div>

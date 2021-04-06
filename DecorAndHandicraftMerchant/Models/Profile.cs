@@ -11,6 +11,8 @@ namespace DecorAndHandicraftMerchant.Models
         [Display(Name = "Profile")]
         public int ProfileId { get; set; }
 
+        public string Username { get; set; }
+
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
@@ -19,8 +21,6 @@ namespace DecorAndHandicraftMerchant.Models
 
         [Display(Name = "Phone Number")]
         public int PhoneNumber { get; set; }
-
-        public string Email { get; set; }
 
         public List<Order> Orders { get; set; }
 

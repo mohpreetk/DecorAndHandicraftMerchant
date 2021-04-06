@@ -1,4 +1,7 @@
-﻿@model DecorAndHandicraftMerchant.Models.Profile
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
+@model DecorAndHandicraftMerchant.Models.Profile
 
 @{
     ViewData["Title"] = "Create";
@@ -11,7 +14,8 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form method="post" asp-action="Create">
+            <input hidden asp-for="Username" value="@User.Identity.Name" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
@@ -27,11 +31,6 @@
                 <label asp-for="PhoneNumber" class="control-label"></label>
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="AddressLine1" class="control-label"></label>
@@ -71,7 +70,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a href="javascript:history.go(-1);" class="bottom_right">Back</a>
 </div>
 
 @section Scripts {

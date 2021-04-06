@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DecorAndHandicraftMerchant.Data;
 using DecorAndHandicraftMerchant.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DecorAndHandicraftMerchant.Controllers
 {
+    [Authorize]
     public class ProfilesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,25 +21,19 @@ namespace DecorAndHandicraftMerchant.Controllers
             _context = context;
         }
 
-        // GET: Profiles
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Profiles.ToListAsync());
-        }
-
         // GET: Profiles/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string username)
         {
-            if (id == null)
+            if (username == null)
             {
                 return NotFound();
             }
 
             var profile = await _context.Profiles
-                .FirstOrDefaultAsync(m => m.ProfileId == id);
+                .FirstOrDefaultAsync(m => m.Username == username);
             if (profile == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Create));
             }
 
             return View(profile);
@@ -54,26 +50,30 @@ namespace DecorAndHandicraftMerchant.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProfileId,FirstName,LastName,PhoneNumber,Email,AddressLine1,AddressLine2,City,Province,Country,PostalCode")] Profile profile)
+        public async Task<IActionResult> Create([Bind("ProfileId,Username, FirstName,LastName,PhoneNumber,AddressLine1,AddressLine2,City,Province,Country,PostalCode")] Profile profile)
         {
-            if (ModelState.IsValid)
+            var usernameVerification = await _context.Profiles.Where(m => m.Username == profile.Username).ToListAsync();
+            if (usernameVerification != null)
             {
-                _context.Add(profile);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(profile);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Details), profile.Username);
+                }
             }
             return View(profile);
         }
 
         // GET: Profiles/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string username)
         {
-            if (id == null)
+            if (username == null)
             {
                 return NotFound();
             }
 
-            var profile = await _context.Profiles.FindAsync(id);
+            var profile = await _context.Profiles.FirstOrDefaultAsync(m => m.Username == username);
             if (profile == null)
             {
                 return NotFound();
@@ -86,9 +86,9 @@ namespace DecorAndHandicraftMerchant.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProfileId,FirstName,LastName,PhoneNumber,Email,AddressLine1,AddressLine2,City,Province,Country,PostalCode")] Profile profile)
+        public async Task<IActionResult> Edit(string username, [Bind("ProfileId,Username, FirstName,LastName,PhoneNumber,AddressLine1,AddressLine2,City,Province,Country,PostalCode")] Profile profile)
         {
-            if (id != profile.ProfileId)
+            if (username != profile.Username)
             {
                 return NotFound();
             }
@@ -111,7 +111,7 @@ namespace DecorAndHandicraftMerchant.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), profile.Username);
             }
             return View(profile);
         }
