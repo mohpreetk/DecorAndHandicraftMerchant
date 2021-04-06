@@ -202,5 +202,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         {
             return _context.SubCategories.Any(e => e.SubCategoryId == id);
         }
+
+        
     }
 }
