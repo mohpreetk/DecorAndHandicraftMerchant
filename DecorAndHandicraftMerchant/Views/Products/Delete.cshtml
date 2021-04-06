@@ -47,6 +47,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="ProductId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a href="javascript:history.go(-1);" class="bottom_right">Back to Products</a>
     </form>
 </div>

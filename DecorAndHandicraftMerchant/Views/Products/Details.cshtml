@@ -50,6 +50,9 @@
 @*for demonstration purpose only*@
 <form asp-action="AddToCart">
     <div class="form-group">
+        <input hidden id="ProductId" value="@Model.ProductId" />
+        <label for="quantity" class="control-label">Quantity: </label>
+        <input required type="number" min="1" max="999" class="quantity"/>
         <input type="submit" value="Add to Cart" class="btn btn-primary" />
     </div>
 </form>
@@ -61,5 +64,5 @@
             <a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> |
         </div>
     }
-    <a asp-action="Index">Back to List</a>
+<a href="javascript:history.go(-1);" class="bottom_right">Back to Products</a>
 </div>
