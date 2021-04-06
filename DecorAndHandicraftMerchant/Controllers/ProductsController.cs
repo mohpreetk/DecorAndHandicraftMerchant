@@ -179,18 +179,17 @@ namespace DecorAndHandicraftMerchant.Controllers
             return _context.Products.Any(e => e.ProductId == id);
         }
 
-        ////Temporary method created to demonstrate add to cart option only for logged in users
-        [Authorize]
         public IActionResult AddToCart(int ProductId, int Quantity)
         {
             var price = _context.Products.Find(ProductId).Price;
 
+            var timeStamp = DateTime.Now;
             //Create Customer Identification
             var CustomerId = GetCustomerId();
             var cart = new Cart
             {
                 ProductId = ProductId,
-                TimeStamp = DateTime.Now,
+                TimeStamp = timeStamp,
                 Quantity = Quantity,
                 UnitPrice = price,
                 CustomerId = CustomerId
