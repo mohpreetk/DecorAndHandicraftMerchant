@@ -9,7 +9,6 @@ namespace DecorAndHandicraftMerchant.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public DbSet<Address> Addresses { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -57,12 +56,6 @@ namespace DecorAndHandicraftMerchant.Data
                    .WithMany(p => p.Orders)
                    .HasForeignKey(o => o.ProfileId)
                    .HasConstraintName("FK_Orders_ProfileId");
-
-            builder.Entity<Order>()
-                   .HasOne(o => o.Address)
-                   .WithMany(a => a.Orders)
-                   .HasForeignKey(o => o.AddressId)
-                   .HasConstraintName("FK_Orders_AddressId");
 
         }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

@@ -17,11 +17,6 @@ namespace DecorAndHandicraftMerchant.Models
         [Display(Name = "Profile")]
         public int ProfileId { get; set; }
 
-        public Address Address { get; set; }
-
-        [Display(Name = "Address")]
-        public int AddressId { get; set; }
-
         [Range(0.01, double.MaxValue, ErrorMessage = "Price can not be negative or zero")]
         [Column(TypeName = "decimal(18,2)")]
         [DisplayFormat(DataFormatString = "{0:c}")]
