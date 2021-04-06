@@ -179,12 +179,63 @@ namespace DecorAndHandicraftMerchant.Controllers
             return _context.Products.Any(e => e.ProductId == id);
         }
 
-        //Temporary method created to demonstrate add to cart option only for logged in users
+        ////Temporary method created to demonstrate add to cart option only for logged in users
         [Authorize]
-        public async Task<IActionResult> AddToCart()
+        public IActionResult AddToCart(int ProductId, int Quantity)
         {
-            var applicationDbContext = _context.Products.Include(p => p.SubCategory);
-            return View(await applicationDbContext.OrderBy(c => c.Name).ToListAsync());
+            var price = _context.Products.Find(ProductId).Price;
+
+            //Create Customer Identification
+            var CustomerId = GetCustomerId();
+            var cart = new Cart
+            {
+                ProductId = ProductId,
+                TimeStamp = DateTime.Now,
+                Quantity = Quantity,
+                UnitPrice = price,
+                CustomerId = CustomerId
+            };
+            _context.Carts.Add(cart);
+            _context.SaveChanges();
+
+            return RedirectToAction("Cart");
+        }
+
+        private string GetCustomerId()
+        {
+            if (HttpContext.Session.GetString("CustomerId") == null)
+            {
+                var CustomerId = "";
+                if (User.Identity.IsAuthenticated)
+                {
+                    //name is not actually name, it is email address
+                    CustomerId = User.Identity.Name;
+                }
+                else
+                {
+                    CustomerId = Guid.NewGuid().ToString();
+                }
+                HttpContext.Session.SetString("CustomerId", CustomerId);
+
+            }
+            return HttpContext.Session.GetString("CustomerId");
+        }
+
+
+        public IActionResult Cart()
+        {
+            var CustomerId = "";
+            if (HttpContext.Session.GetString("CustomerId") == null)
+            {
+                CustomerId = GetCustomerId();
+            }
+            else
+            {
+                CustomerId = HttpContext.Session.GetString("CustomerId");
+            }
+            var cartProducts
+                 = _context.Carts.Where(c => c.CustomerId == CustomerId).ToList();
+            return View(cartProducts);
         }
 
     }

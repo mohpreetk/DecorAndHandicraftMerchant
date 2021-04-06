@@ -17,6 +17,11 @@ namespace DecorAndHandicraftMerchant.Models
         [Display(Name = "Product")]
         public int ProductId { get; set; }
 
+        [Display(Name = "Customer")]
+        public string CustomerId { get; set; }
+
+        public DateTime TimeStamp { get; set; }
+
         [Required]
         [Range(0.01, double.MaxValue, ErrorMessage = "Price can not be negative or zero")]
         [Column(TypeName = "decimal(18,2)")]
@@ -25,13 +30,14 @@ namespace DecorAndHandicraftMerchant.Models
         public decimal UnitPrice { get; set; }
 
         [Range(0, int.MaxValue, ErrorMessage = "Quantity can not be negative")]
-        public int Quantity { get; set; } = 0;
+        public int Quantity { get; set; }
 
-        [Range(0, double.MaxValue, ErrorMessage = "Delivery cost can not be negative")]
-        [Column(TypeName = "decimal(18,2)")]
-        [Display(Name = "Delivery Cost")]
-        [DisplayFormat(DataFormatString = "{0:c}")]
-        public decimal DeliveryCost { get; set; }
+        //To be considered in Future
+        //[Range(0, double.MaxValue, ErrorMessage = "Delivery cost can not be negative")]
+        //[Column(TypeName = "decimal(18,2)")]
+        //[Display(Name = "Delivery Cost")]
+        //[DisplayFormat(DataFormatString = "{0:c}")]
+        //public decimal DeliveryCost { get; set; }
 
     }
 }

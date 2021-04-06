@@ -27,6 +27,7 @@ namespace DecorAndHandicraftMerchant
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             //Allow Google Authentication
             services.AddAuthentication()
                 .AddGoogle(option =>
@@ -34,6 +35,10 @@ namespace DecorAndHandicraftMerchant
                     option.ClientId = Configuration.GetSection("Authentication:Google")["ClientID"];
                     option.ClientSecret = Configuration.GetSection("Authentication:Google")["ClientSecret"];
                 });
+
+            //Sessions added
+            services.AddSession();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -59,6 +64,9 @@ namespace DecorAndHandicraftMerchant
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            //use sessions
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

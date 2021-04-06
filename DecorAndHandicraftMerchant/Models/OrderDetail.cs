@@ -29,7 +29,7 @@ namespace DecorAndHandicraftMerchant.Models
         public decimal UnitPrice { get; set; }
 
         [Range(0, int.MaxValue, ErrorMessage = "Quanity can not be negative")]
-        public int Quantity { get; set; } = 0;
+        public int Quantity { get; set; }
 
         [Range(0.01, double.MaxValue, ErrorMessage = "Price can not be negative or zero")]
         [Column(TypeName = "decimal(18,2)")]
