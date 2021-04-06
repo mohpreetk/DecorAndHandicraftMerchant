@@ -1,4 +1,21 @@
-﻿PRODUCT TABLE
+﻿
+
+Google Authorization
+  //"Authentication": {
+  //  "Google": {
+  //    "ClientID": "202641730303-qek61r4upsmeutnsrj00qndmv8cgmpbn.apps.googleusercontent.com",
+  //    "ClientSecret": "eJ582dmyJcFBBbYBttGFaGfS"
+  //  }
+  //}
+
+
+
+
+
+
+
+
+PRODUCT TABLE
 @*<table class="table">
     <thead>
         <tr>

@@ -23,12 +23,13 @@ namespace DecorAndHandicraftMerchant.Controllers
         }
 
         // GET: SubCategories
-        public async Task<IActionResult> Index(int id)
+        public IActionResult Index(int id)
         {
+            var subCategories = _context.SubCategories.Where(sc => sc.CategoryId == id).OrderBy(sc => sc.Name).ToList();
             //passing on the category id to SubCategory Page
-            ViewBag.id = id;
+            ViewBag.category = _context.Categories.Find(id).Name.ToString();
             var applicationDbContext = _context.SubCategories.Include(s => s.Category);
-            return View(await applicationDbContext.OrderBy(c => c.Name).ToListAsync());
+            return View(subCategories);
         }
 
         // GET: SubCategories/Details/5
@@ -203,6 +204,6 @@ namespace DecorAndHandicraftMerchant.Controllers
             return _context.SubCategories.Any(e => e.SubCategoryId == id);
         }
 
-        
+
     }
 }

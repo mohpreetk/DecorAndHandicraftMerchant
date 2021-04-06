@@ -5,8 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="text-center"></h1>
-<h3 class="text-center">Select a Sub Category</h3>
+<h1 class="text-center">@ViewBag.category</h1>
+<h2 class="text-center">Select a Sub Category</h2>
 
 @if (User.IsInRole("Administrator"))
 {
@@ -18,34 +18,31 @@
 <div class="grid-layout">
     @foreach (var item in Model)
     {
-        // used viewbag to sort products based on category
-        @if (item.Category.CategoryId == ViewBag.id)
-        {
-            <div class="subcategory">
-                <div class="subcategory_image">
-                    @if (item.Photo != null)
-                    {
-                        <img src="~/images/sub-categories_added/@item.Photo" alt="Category" class="img-thumbnail" />
-                    }
-                    else
-                    {
-                        <img src="~/images/n_a.jpg" alt="Product" class="img-thumbnail" />
-                    }
-                </div>
-                <div>
-                    <a asp-controller="Products" asp-action="Index" asp-route-id="@item.SubCategoryId">@Html.DisplayFor(modelItem => item.Name)</a>
-                </div>
-
-                @if (User.IsInRole("Administrator"))
+        <div class="subcategory">
+            <div class="subcategory_image">
+                @if (item.Photo != null)
                 {
-                    <div>
-                        <a asp-action="Edit" asp-route-id="@item.SubCategoryId">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.SubCategoryId">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.SubCategoryId">Delete</a>
-                    </div>
+                    <img src="~/images/sub-categories_added/@item.Photo" alt="Category" class="img-thumbnail" />
+                }
+                else
+                {
+                    <img src="~/images/n_a.jpg" alt="Product" class="img-thumbnail" />
                 }
             </div>
-        }
+            <div>
+                <a asp-controller="Products" asp-action="Index" asp-route-id="@item.SubCategoryId">@Html.DisplayFor(modelItem => item.Name)</a>
+            </div>
+
+            @if (User.IsInRole("Administrator"))
+            {
+                <div>
+                    <a asp-action="Edit" asp-route-id="@item.SubCategoryId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.SubCategoryId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.SubCategoryId">Delete</a>
+                </div>
+            }
+        </div>
+
     }
 
 </div>

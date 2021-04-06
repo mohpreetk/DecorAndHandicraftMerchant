@@ -23,12 +23,13 @@ namespace DecorAndHandicraftMerchant.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index(int id)
+        public IActionResult Index(int id)
         {
-            //passing on the sub category id to Products Page
-            ViewBag.id = id;
+            //using queries instead of logical code in views
+            var products = _context.Products.Where(p => p.SubCategoryId == id).OrderBy(p => p.Name).ToList();
+            ViewBag.subCategory = _context.SubCategories.Find(id).Name.ToString();
             var applicationDbContext = _context.Products.Include(p => p.SubCategory);
-            return View(await applicationDbContext.OrderBy(c => c.Name).ToListAsync());
+            return View(products);
         }
 
         // GET: Products/Details/5
