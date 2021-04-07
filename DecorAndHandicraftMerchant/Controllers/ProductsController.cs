@@ -240,10 +240,30 @@ namespace DecorAndHandicraftMerchant.Controllers
         }
 
         [Authorize]
-        public IActionResult CheckOut()
+        public IActionResult Checkout(decimal id)
         {
+            ViewBag.Total = String.Format("{0:c}", id);
+            if (_context.Profiles
+                .FirstOrDefault(m => m.Username == User.Identity.Name) == null)
+            {
 
-            return View();
+                return RedirectToAction(nameof(Create), "Profiles");
+            }
+            else
+            {
+                ViewData["Profile"] = _context.Profiles.FirstOrDefault(m => m.Username == User.Identity.Name);
+                return View();
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult Checkout([Bind("ProductId,Total")] Order order)
+        {
+            order.OrderDate = DateTime.Now.Date;
+            HttpContext.Session.SetObject("Order", order);
+            return RedirectToAction("Payment");
         }
 
     }

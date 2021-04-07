@@ -12,6 +12,8 @@ namespace DecorAndHandicraftMerchant.Models
         [Display(Name = "Order")]
         public int OrderId { get; set; }
 
+        public DateTime OrderDate { get; set; }
+
         public Profile Profile { get; set; }
 
         [Display(Name = "Profile")]
