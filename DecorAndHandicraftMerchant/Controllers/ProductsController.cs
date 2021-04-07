@@ -10,6 +10,12 @@ using DecorAndHandicraftMerchant.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
+//Stripe payment
+using Stripe;
+//access stripe keys
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
+using Stripe.Checkout;
 
 namespace DecorAndHandicraftMerchant.Controllers
 {
@@ -17,9 +23,12 @@ namespace DecorAndHandicraftMerchant.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductsController(ApplicationDbContext context)
+        IConfiguration _iconfiguration;
+
+        public ProductsController(ApplicationDbContext context, IConfiguration iconfiguration)
         {
             _context = context;
+            _iconfiguration = iconfiguration;
         }
 
         // GET: Products
@@ -63,7 +72,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Description,Price,SubCategoryId")] Product product, IFormFile Photo)
+        public async Task<IActionResult> Create([Bind("ProductId,Name,Description,Price,SubCategoryId")] Models.Product product, IFormFile Photo)
         {
             if (ModelState.IsValid)
             {
@@ -111,7 +120,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,Price,SubCategoryId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,Price,SubCategoryId")] Models.Product product)
         {
             if (id != product.ProductId)
             {
@@ -256,14 +265,81 @@ namespace DecorAndHandicraftMerchant.Controllers
             }
         }
 
+        public IActionResult RemoveFromCart(int id)
+        {
+            var item = _context.Carts.Find(id);
+            if (item != null)
+            {
+                _context.Carts.Remove(item);
+                _context.SaveChanges();
+            }
+            return RedirectToAction(nameof(Cart));
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public IActionResult Checkout([Bind("ProductId,Total")] Order order)
+        public IActionResult Checkout([Bind("ProfileId")] Models.Order order)
         {
-            order.OrderDate = DateTime.Now.Date;
+            order.OrderDate = DateTime.Now;
+            order.Total = (from c in _context.Carts
+                           where c.CustomerId == HttpContext.Session.GetString("CustomerId")
+                           select c.Quantity * c.UnitPrice).Sum();
             HttpContext.Session.SetObject("Order", order);
             return RedirectToAction("Payment");
+        }
+
+        [Authorize]
+        public IActionResult Payment()
+        {
+            var order = HttpContext.Session.GetObject<Models.Order>("Order");
+            ViewBag.Total = order.Total;
+
+            ViewBag.PublishableKey = _iconfiguration.GetSection("Stripe")["PublishableKey"];
+
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult ProcessPayment()
+        {
+            var order = HttpContext.Session.GetObject<Models.Order>("Order");
+
+            StripeConfiguration.ApiKey = _iconfiguration.GetSection("Stripe")["SecretKey"];
+
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string>
+                {
+                  "card"
+                },
+                LineItems = new List<SessionLineItemOptions>
+                {
+                  new SessionLineItemOptions
+                  {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                      UnitAmount = (long?)(order.Total * 100),
+                      Currency = "cad",
+                      ProductData = new SessionLineItemPriceDataProductDataOptions
+                      {
+                        Name = "Decor and Handicraft Merchant"
+                      }
+                    },
+                    Quantity = 1
+                  }
+                },
+                Mode = "payment",
+                SuccessUrl = "https://" + Request.Host + "/Products/SaveOrder",
+                CancelUrl = "https://" + Request.Host + "/Products/Cart"
+            };
+            var service = new SessionService();
+            Session session = service.Create(options);
+            return Json(new
+            {
+                id = session.Id
+            });
         }
 
     }

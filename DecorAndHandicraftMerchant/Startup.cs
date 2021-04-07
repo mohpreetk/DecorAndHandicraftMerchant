@@ -39,6 +39,9 @@ namespace DecorAndHandicraftMerchant
             //Sessions added
             services.AddSession();
 
+            //Add Stripe Support (config support for Products Controller)
+            services.AddSingleton<IConfiguration>(Configuration);
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

@@ -42,7 +42,15 @@ namespace DecorAndHandicraftMerchant.Controllers
         // GET: Profiles/Create
         public IActionResult Create()
         {
-            return View();
+            var usernameVerification = _context.Profiles.Where(m => m.Username == User.Identity.Name).ToListAsync();
+            if (usernameVerification == null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(Edit), new { username = User.Identity.Name });
+            }
         }
 
         // POST: Profiles/Create
@@ -52,16 +60,13 @@ namespace DecorAndHandicraftMerchant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProfileId,Username, FirstName,LastName,PhoneNumber,AddressLine1,AddressLine2,City,Province,Country,PostalCode")] Profile profile)
         {
-            var usernameVerification = await _context.Profiles.Where(m => m.Username == profile.Username).ToListAsync();
-            if (usernameVerification != null)
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    _context.Add(profile);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Details), profile.Username);
-                }
+                _context.Profiles.Add(profile);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Details), new { username = profile.Username });
             }
+
             return View(profile);
         }
 
