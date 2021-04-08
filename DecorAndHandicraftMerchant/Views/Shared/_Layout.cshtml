@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +14,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" id="title"><img src="~/images/app_icons/decor_handicraft_logo.png" alt="Home" title="Home Page" class="icon" /></a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" id="title" style="font-size:x-large">Decor & Handicraft Merchant</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,24 +22,24 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        <li class="nav-item" style="padding-top: 5px">
                             <a class="nav-link" asp-area="" asp-controller="Categories" asp-action="Index">Shop</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Products" asp-action="Cart">
                                 <img src="~/images/app_icons/cart.png" alt="Cart" title="Your Shopping Cart" class="icon" />
-                                @if(Context.Session.GetInt32("ItemCount") != 0)
+                                @if (Context.Session.GetInt32("ItemCount") != 0)
                                 {
                                     <span class="badge badge-secondary">@Context.Session.GetInt32("ItemCount")</span>
                                 }
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Returns">Return Policy</a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item" style="padding-top: 5px">
+                                <a class="nav-link" asp-area="" asp-controller="Orders" asp-action="Index">Your Orders</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -50,9 +52,15 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - DecorAndHandicraftMerchant - Mohpreet Kaur - 200448160 - ASP.NET Core - COMP2084
-        </div>
+        <ul>
+            <li>
+                <a class="text-muted" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </li>
+            <li>
+                <a class="text-muted" asp-area="" asp-controller="Home" asp-action="Returns">Return Policy</a>
+            </li>
+        </ul>
+        &copy; 2021 - DecorAndHandicraftMerchant - Mohpreet Kaur - 200448160 - ASP.NET Core - COMP2084
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

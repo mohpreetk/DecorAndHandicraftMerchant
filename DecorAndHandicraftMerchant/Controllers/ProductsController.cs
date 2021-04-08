@@ -342,6 +342,38 @@ namespace DecorAndHandicraftMerchant.Controllers
             });
         }
 
+        [Authorize]
+        public IActionResult SaveOrder()
+        {
+            var order = HttpContext.Session.GetObject<Models.Order>("Order");
+            _context.Orders.Add(order);
+            _context.SaveChanges();
+            var cartItems = _context.Carts.Where(c => c.CustomerId == User.Identity.Name);
+
+            foreach (var item in cartItems)
+            {
+                var orderDetail = new OrderDetail
+                {
+                    ProductId = item.ProductId,
+                    OrderId = order.OrderId,
+                    UnitPrice = item.UnitPrice,
+                    Quantity = item.Quantity, 
+                    Total = item.UnitPrice * item.Quantity
+                };
+
+                _context.OrderDetails.Add(orderDetail);
+            }
+            _context.SaveChanges();
+            foreach(var item in cartItems)
+            {
+                _context.Carts.Remove(item);
+            }
+            _context.SaveChanges();
+
+            HttpContext.Session.SetInt32("ItemCount", 0);
+            return RedirectToAction("OrderDetails", "Orders", new { id = order.OrderId });
+        }
+
     }
 }
 

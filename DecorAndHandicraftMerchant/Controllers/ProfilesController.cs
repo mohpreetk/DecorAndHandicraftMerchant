@@ -42,8 +42,8 @@ namespace DecorAndHandicraftMerchant.Controllers
         // GET: Profiles/Create
         public IActionResult Create()
         {
-            var usernameVerification = _context.Profiles.Where(m => m.Username == User.Identity.Name).ToListAsync();
-            if (usernameVerification == null)
+            var usernameVerification = _context.Profiles.Where(m => m.Username == User.Identity.Name).ToList();
+            if (usernameVerification.Count == 0)
             {
                 return View();
             }

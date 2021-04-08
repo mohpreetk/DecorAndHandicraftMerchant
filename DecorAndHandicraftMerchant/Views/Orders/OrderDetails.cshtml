@@ -1,0 +1,76 @@
+﻿@model IEnumerable<DecorAndHandicraftMerchant.Models.OrderDetail>
+
+@{
+    ViewData["Title"] = "OrderDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal Total = 0;
+}
+
+<h1>Order #@ViewBag.OrderId Details</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Photo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            Total += item.Total;
+            <tr>
+                <td>
+                    @if (item.Product.Photo != null)
+                    {
+                        <img src="~/images/products_added/@item.Product.Photo" alt="Product" class="img-thumbnail" />
+                    }
+                    else
+                    {
+                        <img src="~/images/n_a.jpg" alt="Product" class="img-thumbnail" />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+            </tr>
+        }
+        <tr>
+            <td colspan="3" class="text-right">
+                Order Total:
+            </td>
+            <td class="text-left">
+                @String.Format("{0:c}", Total)
+            </td>
+            <td>
+                <a asp-controller="Categories" asp-action="Index"><img src="~/images/app_icons/continue_shopping.png" alt="Continue" title="Continue Shopping" class="icon" /></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div>
+    <a href="javascript:history.go(-1);" class="bottom_right">Back</a>
+</div>
