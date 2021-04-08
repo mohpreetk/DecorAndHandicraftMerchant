@@ -24,7 +24,12 @@
         <div>
             @Html.DisplayFor(model => model.Name)
         </div>
-        <a asp-action="Edit" asp-route-id="@Model.CategoryId">Edit</a>
+        <div>
+            @if (User.IsInRole("Administrator"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.CategoryId">Edit</a>
+            }
+        </div>
 
     </div>
 </div>
