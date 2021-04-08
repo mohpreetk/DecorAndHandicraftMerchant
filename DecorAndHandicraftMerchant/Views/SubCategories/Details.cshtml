@@ -8,33 +8,26 @@
 <h1>Details</h1>
 
 <div>
-    <h4>SubCategory</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Photo)
-        </dt>
-        <dd class="col-sm-10">
+    <div class="center_view">
+        <div>
             @if (Model.Photo != null)
             {
-                <img src="~/images/sub-categories_added/@Model.Photo" alt="Category" />
+                <img src="~/images/sub-categories_added/@Model.Photo" alt="Sub Category" asp-append-version="true" width="250px" height="250px" />
             }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class="col-sm-10">
+            else
+            {
+                <img src="~/images/n_a.jpg" alt="Product" class="detail_image" />
+            }
+        </div>
+        <div class="text-center">
+            @Html.DisplayFor(model => model.Name)<br />
             @Html.DisplayFor(model => model.Category.Name)
-        </dd>
-    </dl>
+        </div>
+        <a asp-action="Edit" asp-route-id="@Model.SubCategoryId">Edit</a>
+
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.SubCategoryId">Edit</a> |
-    <a href="javascript:history.go(-1);" class="bottom_right">Back to Sub Categories</a>
+<div class="bottom_right">
+    <a href="javascript:history.go(-1);"><img src="~/images/app_icons/back.png" alt="Back" title="Back" class="back" /></a>
 </div>
