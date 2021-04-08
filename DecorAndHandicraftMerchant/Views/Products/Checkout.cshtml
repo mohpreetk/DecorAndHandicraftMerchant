@@ -7,9 +7,8 @@
 
 <h1>Checkout</h1>
 
-<h4>Order</h4>
 <hr />
-<div class="row center_view">
+<div class="row">
     <div class="col-md-4">
         <form asp-action="Checkout">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -31,7 +30,7 @@
                 <input type="submit" value="Go To Payment" class="btn btn-primary" />
             </div>
             <div class="bottom_right">
-                <a asp-action="Edit" asp-route-username="@User.Identity.Name">Edit Profile</a>
+                <a asp-controller="Profiles" asp-action="Edit" asp-route-username="@User.Identity.Name">Edit Profile</a>
                 <br />
                 <a href="javascript:history.go(-1);"><img src="~/images/app_icons/back.png" alt="Back" title="Back" class="back" /></a>
             </div>

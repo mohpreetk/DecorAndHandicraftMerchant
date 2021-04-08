@@ -33,8 +33,7 @@ namespace DecorAndHandicraftMerchant.Controllers
             else
             {
                 // list the orders only for logged in customer
-                var orders = _context.Orders.Where(o => o.Profile.Username == User.Identity.Name).OrderByDescending(o => o.OrderDate).ToList();
-                var applicationDbContext = _context.Orders.Include(o => o.Profile).Include(o => o.OrderDetails);
+                var orders = _context.Orders.Include(o => o.Profile).Include(o => o.OrderDetails).Where(o => o.Profile.Username == User.Identity.Name).OrderByDescending(o => o.OrderDate).ToList();
                 return View(orders);
             }
         }
@@ -49,7 +48,7 @@ namespace DecorAndHandicraftMerchant.Controllers
             }
 
             // list order details for the selected order id
-            var orderDetails = _context.OrderDetails.Include(od => od.Product).Where(od => od.OrderId == id).OrderBy(od => od.Product.Name).ToList();
+            var orderDetails = _context.OrderDetails.Include(od => od.Product).Include(od => od.Order.Profile).Where(od => od.OrderId == id).OrderBy(od => od.Product.Name).ToList();
             // Save order id in a variable
             ViewData["OrderId"] = _context.Orders.Find(id).OrderId;
 

@@ -14,6 +14,9 @@
                 Order Date
             </th>
             <th>
+                Ordered By
+            </th>
+            <th>
                 Order Number
             </th>
             <th>
@@ -29,6 +32,9 @@
                 @Html.DisplayFor(modelItem => item.OrderDate)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Profile.FirstName)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.OrderId)
             </td>
             <td>
@@ -37,7 +43,7 @@
             <td>
                 <a asp-controller="Orders" asp-action="OrderDetails" asp-route-id="@item.OrderId">See Details >></a>
             </td>
-            
+
         </tr>
 }
     </tbody>

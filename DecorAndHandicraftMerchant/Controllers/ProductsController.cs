@@ -80,7 +80,7 @@ namespace DecorAndHandicraftMerchant.Controllers
             if (ModelState.IsValid)
             {
                 // check if a valid photo is given in order to prevent null pointer exception
-                if (product.Photo != null && Photo.Length > 0)
+                if (Photo != null && Photo.Length > 0)
                 {
                     // get the name of temporary file
                     var tempFile = Path.GetTempFileName();
@@ -141,7 +141,7 @@ namespace DecorAndHandicraftMerchant.Controllers
                 try
                 {
                     // check if a valid photo is given in order to prevent null pointer exception
-                    if (product.Photo != null && Photo.Length > 0)
+                    if (Photo != null && Photo.Length > 0)
                     {
                         // get the name of temporary file
                         var tempFile = Path.GetTempFileName();
