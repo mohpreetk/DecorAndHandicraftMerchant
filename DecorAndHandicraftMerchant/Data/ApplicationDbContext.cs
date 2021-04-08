@@ -44,7 +44,7 @@ namespace DecorAndHandicraftMerchant.Data
                    .WithMany(p => p.OrderDetails)
                    .HasForeignKey(od => od.ProductId)
                    .HasConstraintName("FK_OrderDetails_ProductId");
-            
+
             builder.Entity<OrderDetail>()
                    .HasOne(od => od.Order)
                    .WithMany(o => o.OrderDetails)

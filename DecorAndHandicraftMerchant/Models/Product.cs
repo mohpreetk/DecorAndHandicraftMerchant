@@ -33,7 +33,7 @@ namespace DecorAndHandicraftMerchant.Models
 
         public List<Cart> Carts { get; set; }
 
-        public List<OrderDetail> OrderDetails { get; set; } 
+        public List<OrderDetail> OrderDetails { get; set; }
 
     }
 }
