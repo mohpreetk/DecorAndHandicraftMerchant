@@ -47,13 +47,14 @@ namespace DecorAndHandicraftMerchant.Controllers
             return View(category);
         }
 
-        [Authorize (Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         // GET: Categories/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: Categories/Create/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
@@ -77,7 +78,7 @@ namespace DecorAndHandicraftMerchant.Controllers
                         category.Photo = fileName;
                     }
                 }
-                
+
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -103,8 +104,6 @@ namespace DecorAndHandicraftMerchant.Controllers
         }
 
         // POST: Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
@@ -184,6 +183,7 @@ namespace DecorAndHandicraftMerchant.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Check if category exists in Database
         private bool CategoryExists(int id)
         {
             return _context.Categories.Any(e => e.CategoryId == id);

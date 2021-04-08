@@ -21,6 +21,8 @@ namespace DecorAndHandicraftMerchant.Controllers
             _context = context;
         }
 
+        // no index because each user will have only one profile
+
         // GET: Profiles/Details/5
         public async Task<IActionResult> Details(string username)
         {
@@ -29,6 +31,7 @@ namespace DecorAndHandicraftMerchant.Controllers
                 return NotFound();
             }
 
+            // show the profile for logged in user
             var profile = await _context.Profiles
                 .FirstOrDefaultAsync(m => m.Username == username);
             if (profile == null)
@@ -42,6 +45,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         // GET: Profiles/Create
         public IActionResult Create()
         {
+            //check if the profile already exists, edit if does and create if it does not
             var usernameVerification = _context.Profiles.Where(m => m.Username == User.Identity.Name).ToList();
             if (usernameVerification.Count == 0)
             {
@@ -77,7 +81,7 @@ namespace DecorAndHandicraftMerchant.Controllers
             {
                 return NotFound();
             }
-
+            // get user's profile
             var profile = await _context.Profiles.FirstOrDefaultAsync(m => m.Username == username);
             if (profile == null)
             {
@@ -150,6 +154,7 @@ namespace DecorAndHandicraftMerchant.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //check if profile exists in database
         private bool ProfileExists(int id)
         {
             return _context.Profiles.Any(e => e.ProfileId == id);

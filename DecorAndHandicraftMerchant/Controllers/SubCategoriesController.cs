@@ -25,8 +25,9 @@ namespace DecorAndHandicraftMerchant.Controllers
         // GET: SubCategories
         public IActionResult Index(int id)
         {
+            // list sub categories with clicked category id
             var subCategories = _context.SubCategories.Where(sc => sc.CategoryId == id).OrderBy(sc => sc.Name).ToList();
-            //passing on the category id to SubCategory Page
+            //passing on the category name to SubCategory Page
             ViewBag.category = _context.Categories.Find(id).Name.ToString();
             var applicationDbContext = _context.SubCategories.Include(s => s.Category);
             return View(subCategories);
@@ -68,7 +69,7 @@ namespace DecorAndHandicraftMerchant.Controllers
         {
             if (ModelState.IsValid)
             {
-                // In order to prevent null pointer exception
+                // check if a valid photo is given in order to prevent null pointer exception
                 if (Photo != null && Photo.Length > 0)
                 {
                     var tempFile = Path.GetTempFileName();
@@ -77,7 +78,7 @@ namespace DecorAndHandicraftMerchant.Controllers
 
                     var uploadPath = Directory.GetCurrentDirectory() + "\\wwwroot\\images\\sub-categories_added\\" + fileName;
 
-                    //to prevent upload of photos that can not be stored in OS
+                    // restrict the upload path to 256 characters to prevent upload of photos that can not be stored in OS
                     if (uploadPath.Length < 260)
                     {
                         using var stream = new FileStream(uploadPath, FileMode.Create);
@@ -129,7 +130,7 @@ namespace DecorAndHandicraftMerchant.Controllers
             {
                 try
                 {
-                    // In order to prevent null pointer exception
+                    // check if a valid photo is given in order to prevent null pointer exception
                     if (Photo != null && Photo.Length > 0)
                     {
                         var tempFile = Path.GetTempFileName();
@@ -138,7 +139,7 @@ namespace DecorAndHandicraftMerchant.Controllers
 
                         var uploadPath = Directory.GetCurrentDirectory() + "\\wwwroot\\images\\sub-categories_added\\" + fileName;
 
-                        //to prevent upload of photos that can not be stored in OS
+                        // restrict the upload path to 256 characters to prevent upload of photos that can not be stored in OS
                         if (uploadPath.Length < 260)
                         {
                             using var stream = new FileStream(uploadPath, FileMode.Create);
@@ -199,6 +200,7 @@ namespace DecorAndHandicraftMerchant.Controllers
             return RedirectToAction(nameof(Index), new { id = subCategory.CategoryId });
         }
 
+        // check if sub category exists in database
         private bool SubCategoryExists(int id)
         {
             return _context.SubCategories.Any(e => e.SubCategoryId == id);

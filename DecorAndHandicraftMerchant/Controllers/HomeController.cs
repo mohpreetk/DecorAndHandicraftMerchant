@@ -18,16 +18,19 @@ namespace DecorAndHandicraftMerchant.Controllers
             _logger = logger;
         }
 
+        // return homepage
         public IActionResult Index()
         {
             return View();
         }
 
+        // return privacy page
         public IActionResult Privacy()
         {
             return View();
         }
 
+        // return returns page
         public IActionResult Returns()
         {
             return View();
