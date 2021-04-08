@@ -14,18 +14,24 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
+
+                @*Company title - Link to Home*@
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" id="title" style="font-size:x-large">Decor & Handicraft Merchant</a>
+
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item" style="padding-top: 5px">
+                            @*Link to Categories*@
                             <a class="nav-link" asp-area="" asp-controller="Categories" asp-action="Index">Shop</a>
                         </li>
                         <li class="nav-item">
+                            @*Link to Cart*@
                             <a class="nav-link" asp-area="" asp-controller="Products" asp-action="Cart">
                                 <img src="~/images/app_icons/cart.png" alt="Cart" title="Your Shopping Cart" class="icon" />
                                 @if (Context.Session.GetInt32("ItemCount") != 0)
@@ -36,6 +42,7 @@
                         </li>
                         @if (SignInManager.IsSignedIn(User))
                         {
+                            @*Link to Order History - Only shows if user is signed in.*@
                             <li class="nav-item" style="padding-top: 5px">
                                 <a class="nav-link" asp-area="" asp-controller="Orders" asp-action="Index">Your Orders</a>
                             </li>
@@ -54,9 +61,11 @@
     <footer class="border-top footer text-muted">
         <ul>
             <li>
+                @*Link to Privacy page*@
                 <a class="text-muted" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </li>
             <li>
+                @*Link to Returns page*@
                 <a class="text-muted" asp-area="" asp-controller="Home" asp-action="Returns">Return Policy</a>
             </li>
         </ul>
