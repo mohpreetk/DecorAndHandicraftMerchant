@@ -400,7 +400,7 @@ namespace DecorAndHandicraftMerchant.Controllers
             _context.Orders.Add(order);
             _context.SaveChanges();
             // get the current cart items and add each of them to order detail
-            var cartItems = _context.Carts.Where(c => c.CustomerId == User.Identity.Name);
+            var cartItems = _context.Carts.Where(c => c.CustomerId == HttpContext.Session.GetString("CustomerId"));
 
             foreach (var item in cartItems)
             {
