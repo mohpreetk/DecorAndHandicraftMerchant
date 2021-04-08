@@ -7,7 +7,7 @@
 
 <h1>Delete</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to delete this? All the subsequent sub categories and products will be deleted.</h3>
 <div class="center_view">
     <hr />
     <div>
@@ -20,15 +20,8 @@
             <img src="~/images/n_a.jpg" alt="Product" class="detail_image" />
         }
     </div>
-    <div>
-        <dl class="row">
-            <dt class="col-sm-6">
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-            <dd class="col-sm-6">
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-        </dl>
+    <div class="text-center">
+        @Html.DisplayFor(model => model.Name)
     </div>
 
     <form asp-action="Delete">
@@ -37,6 +30,6 @@
     </form>
 
     <div class="bottom_right">
-        <a asp-action="Index">Back to Categories</a>
+        <a href="javascript:history.go(-1);"><img src="~/images/app_icons/back.png" alt="Back" title="Back" class="back" /></a>
     </div>
 </div>

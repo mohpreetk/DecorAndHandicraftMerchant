@@ -1,7 +1,7 @@
 ﻿@model DecorAndHandicraftMerchant.Models.Category
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Category Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -17,22 +17,18 @@
             }
             else
             {
+                // send image not found if no image is present
                 <img src="~/images/n_a.jpg" alt="Product" class="detail_image" />
             }
         </div>
         <div>
-            <dl class="row text-center">
-                <dt class="col-sm-6">
-                    @Html.DisplayNameFor(model => model.Name)
-                </dt>
-                <dd class="col-sm-6">
-                    @Html.DisplayFor(model => model.Name)
-                </dd>
-            </dl>
+            @Html.DisplayFor(model => model.Name)
         </div>
+        <a asp-action="Edit" asp-route-id="@Model.CategoryId">Edit</a>
+
     </div>
 </div>
 <div class="bottom_right">
-    <a asp-action="Edit" asp-route-id="@Model.CategoryId">Edit</a> |
-    <a asp-action="Index">Back to Categories</a>
+    <a href="javascript:history.go(-1);"><img src="~/images/app_icons/back.png" alt="Back" title="Back" class="back" /></a>
 </div>
+
